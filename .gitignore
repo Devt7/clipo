@@ -1,0 +1,25 @@
+# Build outputs
+build/
+clipo
+clipo-*
+*.exe
+
+# Deno
+deno.lock
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*_output.txt
+test_output.txt
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

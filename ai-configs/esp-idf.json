@@ -1,0 +1,93 @@
+{
+  "name": "ESP-IDF Project AI Configuration",
+  "extends": "base.json",
+  "instructions": [
+    "Focus on ESP-IDF framework patterns, FreeRTOS tasks, and hardware abstraction",
+    "Consider component architecture, Kconfig configuration, and build system",
+    "Pay attention to GPIO, peripheral drivers, and hardware-specific implementations",
+    "Look for memory management, task synchronization, and real-time constraints",
+    "Consider power management, WiFi/Bluetooth connectivity, and IoT patterns",
+    "Evaluate security considerations for embedded and connected devices"
+  ],
+  "prompts": [
+    "How is the ESP-IDF project structured with components and main application?",
+    "What peripherals and hardware features are being utilized?",
+    "How are FreeRTOS tasks organized and synchronized?",
+    "What communication protocols are implemented (WiFi, Bluetooth, UART, SPI, I2C)?",
+    "How is memory management handled (heap, stack, flash partitions)?",
+    "What power management strategies are in place?",
+    "How are interrupts and hardware events handled?",
+    "What security measures are implemented for the device?",
+    "How is Over-the-Air (OTA) update functionality structured?",
+    "What debugging and logging strategies are being used?"
+  ],
+  "contextualPrompts": {
+    "small": [
+      "What is the main functionality of this ESP-IDF application?",
+      "What hardware peripherals are being used?",
+      "Are there any obvious issues with task priorities or memory usage?"
+    ],
+    "medium": [
+      "How are the different components organized and interconnected?",
+      "What communication patterns are used between tasks?",
+      "How is hardware abstraction implemented?",
+      "What error handling strategies are in place?"
+    ],
+    "large": [
+      "What is the overall system architecture and task design?",
+      "How are different subsystems (WiFi, sensors, actuators) integrated?",
+      "What are the real-time performance characteristics?",
+      "How well does the design handle scalability and maintainability?",
+      "What are the power consumption and optimization strategies?"
+    ]
+  },
+  "keyFiles": [
+    "CMakeLists.txt",
+    "sdkconfig",
+    "sdkconfig.defaults",
+    "partitions.csv",
+    "main/main.c",
+    "main/CMakeLists.txt",
+    "main/Kconfig.projbuild",
+    "components/*/component.mk",
+    "components/*/CMakeLists.txt"
+  ],
+  "analysisAreas": [
+    "Component architecture and dependencies",
+    "FreeRTOS task design and synchronization",
+    "Hardware peripheral configuration and usage",
+    "Memory management and optimization",
+    "Communication protocols implementation",
+    "Power management and sleep modes",
+    "Security implementation and best practices", 
+    "Error handling and fault tolerance",
+    "Build system and configuration management",
+    "Performance optimization and real-time constraints",
+    "WiFi/Bluetooth connectivity patterns",
+    "OTA update mechanisms",
+    "Debugging and logging infrastructure",
+    "Hardware abstraction layer design"
+  ],
+  "hardwareConsiderations": [
+    "GPIO pin assignments and conflicts",
+    "Peripheral bus sharing and timing",
+    "Memory constraints (RAM, Flash, PSRAM)",
+    "Power consumption optimization",
+    "Real-time timing requirements",
+    "Interrupt handling priorities",
+    "Clock and timing configuration",
+    "Hardware-specific workarounds"
+  ],
+  "commonPatterns": [
+    "Task creation and management",
+    "Queue-based inter-task communication",
+    "Event groups for synchronization",
+    "Timer usage for periodic operations",
+    "Non-volatile storage (NVS) usage",
+    "HTTP/HTTPS client/server implementation",
+    "JSON parsing and generation",
+    "MQTT client implementation",
+    "Sensor data collection and processing",
+    "Actuator control patterns"
+  ]
+}

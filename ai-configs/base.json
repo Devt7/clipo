@@ -1,0 +1,43 @@
+{
+  "name": "Base Configuration",
+  "description": "Default AI formatting configuration for all projects",
+  "instructions": [
+    "Read the entire codebase before providing suggestions",
+    "Consider the project structure and existing patterns", 
+    "Maintain consistency with the current coding style",
+    "Provide specific, actionable recommendations",
+    "Explain your reasoning for any suggested changes"
+  ],
+  "prompts": [
+    "What is the overall architecture of this codebase?",
+    "What are the main components and their responsibilities?",
+    "Are there any code quality issues or potential improvements?",
+    "What are the key dependencies and their usage patterns?",
+    "Is the code following best practices for the language/framework?"
+  ],
+  "contextualPrompts": {
+    "small": [
+      "Can you provide a brief overview of what this code does?",
+      "Are there any obvious bugs or improvements needed?",
+      "How would you rate the code quality and organization?"
+    ],
+    "medium": [
+      "What is the main functionality and how is it organized?",
+      "Are there any architectural patterns being used?",
+      "What would be the next logical features to implement?",
+      "Are there any performance or security considerations?"
+    ],
+    "large": [
+      "What are the core modules and their relationships?",
+      "How is the application structured and what are the main flows?",
+      "What are potential scalability concerns?",
+      "Are there opportunities for refactoring or modularization?"
+    ]
+  },
+  "formatSettings": {
+    "includeLineNumbers": false,
+    "addSeparators": true,
+    "includeFileSummary": true,
+    "includeMetadata": true
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "name": "Python Project AI Configuration",
+  "extends": "base.json",
+  "instructions": [
+    "Focus on Python best practices, PEP compliance, and idiomatic patterns",
+    "Consider package structure, dependency management, and virtual environments",
+    "Pay attention to testing strategies, documentation, and code organization",
+    "Look for opportunities to improve performance and maintainability",
+    "Consider security implications and error handling patterns"
+  ],
+  "prompts": [
+    "How is the Python project structured and organized?",
+    "What dependencies are being used and how are they managed?",
+    "Are Python best practices and PEP standards being followed?",
+    "How is testing implemented (unittest, pytest, etc.)?",
+    "What design patterns or architectural approaches are being used?",
+    "How is error handling and logging implemented?",
+    "Are there any performance considerations or optimizations?",
+    "How comprehensive is the documentation and type hinting?"
+  ],
+  "contextualPrompts": {
+    "small": [
+      "What is the main functionality of this Python code?",
+      "Are there any obvious code quality issues?",
+      "Is the code following Python naming conventions?"
+    ],
+    "medium": [
+      "How is the package/module structure organized?",
+      "What external libraries are being used effectively?",
+      "Are there any opportunities for better error handling?",
+      "How is configuration and environment management handled?"
+    ],
+    "large": [
+      "What is the overall application architecture?",
+      "How are different components and modules interconnected?",
+      "What patterns are used for data processing and business logic?",
+      "Are there opportunities for better code organization or refactoring?",
+      "How well does the project follow Python packaging standards?"
+    ]
+  },
+  "keyFiles": [
+    "requirements.txt",
+    "pyproject.toml", 
+    "setup.py",
+    "__init__.py",
+    "main.py",
+    "app.py",
+    "conftest.py"
+  ],
+  "analysisAreas": [
+    "Code organization and module structure",
+    "Dependency management and requirements",
+    "Testing coverage and methodology",
+    "Error handling and exception management",
+    "Performance and optimization opportunities",
+    "Documentation and type hinting",
+    "Security considerations",
+    "Packaging and distribution setup"
+  ]
+}

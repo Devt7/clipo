@@ -1,0 +1,18 @@
+{
+  "tasks": {
+    "dev": "deno run --watch main.ts",
+    "monitor": "deno run --allow-read --allow-write --allow-run monitor.ts",
+    "monitor-verbose": "deno run --allow-read --allow-write --allow-run monitor.ts . --verbose",
+    "demo": "deno run --allow-read --allow-write --allow-run demo.ts",
+    "build": "mkdir -p build && deno compile --allow-read --allow-write --allow-run --output build/clipo clipo.ts",
+    "build-all": "deno task build && deno task build-macos && deno task build-linux && deno task build-windows",
+    "build-macos": "mkdir -p build && deno compile --allow-read --allow-write --allow-run --target x86_64-apple-darwin --output build/clipo-macos-x64 clipo.ts && deno compile --allow-read --allow-write --allow-run --target aarch64-apple-darwin --output build/clipo-macos-arm64 clipo.ts",
+    "build-linux": "mkdir -p build && deno compile --allow-read --allow-write --allow-run --target x86_64-unknown-linux-gnu --output build/clipo-linux-x64 clipo.ts",
+    "build-windows": "mkdir -p build && deno compile --allow-read --allow-write --allow-run --target x86_64-pc-windows-msvc --output build/clipo-windows-x64.exe clipo.ts",
+  "install": "deno install --global --allow-read --allow-write --allow-run --name clipo clipo.ts",
+    "test-clipo": "./build/clipo . --help"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1"
+  }
+}

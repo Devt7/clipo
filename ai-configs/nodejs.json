@@ -1,0 +1,61 @@
+{
+  "name": "Node.js Project AI Configuration", 
+  "extends": "base.json",
+  "instructions": [
+    "Focus on Node.js patterns, async/await usage, and npm ecosystem integration",
+    "Consider package.json scripts, dependency management, and module organization",
+    "Pay attention to Express/Fastify patterns, middleware, and API design",
+    "Look for opportunities to improve performance, security, and scalability",
+    "Consider testing strategies, error handling, and logging patterns"
+  ],
+  "prompts": [
+    "How is the Node.js application structured and organized?",
+    "What frameworks and libraries are being used (Express, Fastify, etc.)?",
+    "How are routes, middleware, and API endpoints organized?",
+    "What async patterns and error handling strategies are in place?",
+    "How is database connectivity and data management handled?",
+    "What testing frameworks and strategies are being used?",
+    "How are environment variables and configuration managed?",
+    "What security measures and best practices are implemented?"
+  ],
+  "contextualPrompts": {
+    "small": [
+      "What type of Node.js application is this (API, CLI, web app)?",
+      "What are the main dependencies and their purposes?",
+      "Are there any obvious performance or security issues?"
+    ],
+    "medium": [
+      "How is the application architecture organized?",
+      "What patterns are used for async operations and error handling?",
+      "How are routes and business logic separated?",
+      "What approach is taken for testing and validation?"
+    ],
+    "large": [
+      "What is the overall system architecture and data flow?",
+      "How are different services and modules interconnected?",
+      "What scalability considerations are in place?",
+      "Are there opportunities for better code organization or performance optimization?",
+      "How comprehensive are the testing and deployment strategies?"
+    ]
+  },
+  "keyFiles": [
+    "package.json",
+    "package-lock.json",
+    "server.js",
+    "app.js",
+    "index.js",
+    ".env",
+    "docker-compose.yml"
+  ],
+  "analysisAreas": [
+    "Application architecture and organization",
+    "API design and route management",
+    "Middleware and request processing",
+    "Database integration and data modeling",
+    "Authentication and authorization",
+    "Error handling and logging",
+    "Performance optimization",
+    "Security best practices",
+    "Testing coverage and strategies"
+  ]
+}

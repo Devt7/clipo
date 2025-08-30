@@ -1,0 +1,58 @@
+{
+  "name": "Next.js Project AI Configuration",
+  "extends": "base.json",
+  "instructions": [
+    "Focus on React components, hooks, and Next.js-specific patterns",
+    "Consider SSR/SSG implications and performance optimizations",
+    "Pay attention to routing, API routes, and data fetching patterns",
+    "Consider SEO and accessibility best practices",
+    "Look for opportunities to optimize bundle size and loading performance"
+  ],
+  "prompts": [
+    "How is the Next.js app structured (App Router vs Pages Router)?",
+    "What components are being used and how are they organized?",
+    "Are there any performance optimizations in place (Image, Link, etc.)?",
+    "How is data fetching handled (SSR, SSG, Client-side)?",
+    "Are there any SEO considerations or meta tag optimizations?",
+    "What styling approach is being used (CSS Modules, Styled Components, Tailwind)?",
+    "How are API routes structured and what do they handle?",
+    "Are there any state management patterns (Context, Redux, Zustand)?"
+  ],
+  "contextualPrompts": {
+    "small": [
+      "Is this using App Router or Pages Router?",
+      "What's the main purpose of this Next.js application?",
+      "Are there any obvious performance improvements needed?"
+    ],
+    "medium": [
+      "How is the component architecture organized?",
+      "What data fetching strategies are being used?",
+      "Are there any custom hooks or utilities that could be improved?",
+      "How is routing and navigation handled?"
+    ],
+    "large": [
+      "What is the overall application architecture?",
+      "How is state management handled across the application?",
+      "What are the main user flows and how are they implemented?",
+      "Are there opportunities for code splitting or performance optimization?",
+      "How well does the application follow Next.js best practices?"
+    ]
+  },
+  "keyFiles": [
+    "next.config.js",
+    "app/layout.tsx",
+    "pages/_app.tsx",
+    "pages/_document.tsx",
+    "app/globals.css",
+    "middleware.ts"
+  ],
+  "analysisAreas": [
+    "Component structure and reusability",
+    "Data fetching and caching strategies", 
+    "Performance optimizations",
+    "SEO implementation",
+    "Error handling and loading states",
+    "TypeScript usage and type safety",
+    "Testing coverage and strategies"
+  ]
+}

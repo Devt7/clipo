@@ -1,0 +1,59 @@
+{
+  "name": "Deno TypeScript Project AI Configuration",
+  "extends": "base.json",
+  "instructions": [
+    "Focus on Deno-specific patterns, permissions, and standard library usage",
+    "Consider TypeScript best practices and type safety",
+    "Pay attention to import maps, deno.json configuration, and module structure",
+    "Look for opportunities to leverage Deno's built-in tooling and APIs",
+    "Consider security implications of permissions and external dependencies"
+  ],
+  "prompts": [
+    "How is the Deno project structured and configured?",
+    "What standard library modules are being used effectively?",
+    "Are permissions properly scoped and minimal?",
+    "How are external dependencies managed (import maps, deps.ts)?",
+    "What TypeScript features and patterns are being leveraged?",
+    "Are there any Deno-specific APIs or features being used?",
+    "How is testing implemented (Deno.test)?",
+    "Is the project taking advantage of Deno's built-in formatter/linter?"
+  ],
+  "contextualPrompts": {
+    "small": [
+      "What does this Deno script/module do?",
+      "Are the imports and permissions appropriate?",
+      "Is the TypeScript usage effective and type-safe?"
+    ],
+    "medium": [
+      "How is the module architecture organized?",
+      "What Deno standard library features are being used?",
+      "Are there any security considerations with permissions?",
+      "How is error handling implemented?"
+    ],
+    "large": [
+      "What is the overall application architecture?",
+      "How are modules organized and dependencies managed?",
+      "What patterns are used for async operations and concurrency?",
+      "Are there opportunities to better leverage Deno's capabilities?",
+      "How comprehensive is the testing strategy?"
+    ]
+  },
+  "keyFiles": [
+    "deno.json",
+    "deno.jsonc", 
+    "import_map.json",
+    "deps.ts",
+    "mod.ts",
+    "main.ts"
+  ],
+  "analysisAreas": [
+    "Module structure and exports",
+    "Permission usage and security",
+    "Standard library utilization",
+    "TypeScript type safety and patterns",
+    "Async/await and Promise handling",
+    "Testing coverage and approach",
+    "Performance considerations",
+    "Dependency management strategy"
+  ]
+}
