@@ -1,10 +1,12 @@
+**Warning: This app is 100% vibecoded.**
+
 # Clipo - Clip & C0de
 
 A command-line tool designed to streamline your AI-assisted development workflow (compatible with Google Gemini, Claude, Grok, ChatGPT, and other LLMs). Clipo intelligently analyzes your project structure, automatically detects project types, and processes files with smart ignore patterns—making it effortless to share your codebase context with Large Language Models. Features real-time clipboard monitoring to automatically detect file patterns and seamlessly replace file content during development.
 
 ## 🚀 Key Features
 
-### **📋 NEW: Clipboard Monitoring**
+### **📋 Clipboard Monitoring**
 - **⚡ Real-time Updates**: Monitor clipboard for file replacement patterns
 - **🎯 Smart Pattern Detection**: Automatically detects `// filepath` patterns
 - **📁 Auto Directory Creation**: Creates nested directories automatically
@@ -40,10 +42,10 @@ A command-line tool designed to streamline your AI-assisted development workflow
 
 #### Global Deno Installation
 ```bash
-# Install globally using Deno (requires repository to be public)
 deno install --global --allow-read --allow-write --allow-run --name clipo https://raw.githubusercontent.com/Devt7/clipo/main/clipo.ts
+```
 
-# Alternative: Install from local clone
+```bash
 git clone https://github.com/Devt7/clipo.git
 cd clipo
 deno task install
@@ -51,20 +53,20 @@ deno task install
 
 #### Build from Source
 ```bash
-# Clone the repository
 git clone https://github.com/Devt7/CopyFileContents_deno.git
 cd CopyFileContents_deno
-
-# Build for current platform (executable created in build/ folder)
 deno task build
+```
 
-# Build for all platforms (all executables in build/ folder)
+```bash
 deno task build-all
+```
 
-# Install globally
+```bash
 deno task install
+```
 
-# Run the locally built executable
+```bash
 ./build/clipo . --help
 ```
 
@@ -86,13 +88,14 @@ When detected, it automatically creates or updates the specified file with the p
 #### Starting Clipboard Monitor
 
 ```bash
-# Start monitoring current directory
 clipo . --monitor
+```
 
-# Monitor with verbose output
+```bash
 clipo . --monitor --verbose
+```
 
-# Custom check interval (500ms)
+```bash
 clipo . --monitor --monitor-interval=500 --verbose
 ```
 
@@ -204,28 +207,31 @@ These prompts ensure your AI responses are immediately compatible with Clipo's c
 
 ### File Processing
 ```bash
-# Auto-detect and process current directory
 clipo .
+```
 
-# Process with output file
+```bash
 clipo /path/to/project output.txt
+```
 
-# Include specific file extensions only
+```bash
 clipo /path/to/project output.txt .js,.ts,.md
+```
 
-# AI-optimized output
+```bash
 clipo . output.md --ai-format=markdown --include-stats
 ```
 
 ### Advanced Options
 ```bash
-# Disable auto-detection
 clipo . --no-auto-detect
+```
 
-# Include ignored files in structure (marked as excluded)
+```bash
 clipo . -AIFI
+```
 
-# Add files/folders/extensions to ignore list
+```bash
 clipo . --add-file=secrets.txt
 clipo . --add-folder=temp
 clipo . --add-ext=.tmp
@@ -376,7 +382,7 @@ which clipo
 - **Documentation**: Check this README for complete information
 - **Updates**: Watch the repository for new releases
 
-## � What's New in This Version
+## 🚀 What's New in This Version
 
 ### **Enhanced Project Detection**
 - Added support for 17+ project types with intelligent scoring
@@ -453,5 +459,5 @@ The modular architecture makes it easy to add new project types:
 MIT License - Feel free to use in your projects!
 
 ---
+**Made with ❤️ for lazy developers.**
 
-**Made with ❤️ for developers who value intelligent automation**
