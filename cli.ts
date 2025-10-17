@@ -27,6 +27,8 @@ export interface CliOptions {
   cpymon: boolean;
   monitorInterval: number;
   verbose: boolean;
+  createConfig: boolean;
+  showConfigHelp: boolean;
 }
 
 const helpText = `
@@ -72,6 +74,7 @@ Arguments:
   -AIFI                        Include ignored files in the directory structure, marked as (excluded).
   -no-style                    Exclude styling emojis from directory structure output
   --no-auto-detect             Disable automatic project type detection
+  -cc, --cc                    Create a default clipo.json config file in the target directory.
 
 🎯 AI Use Case Examples:
   # Basic AI-ready output with statistics
@@ -148,134 +151,177 @@ Configuration File Format (clipo.cfg):
    .png, .jpeg: 🖼️                  # Custom icons by extension
 `;
 
+export const configHelpText = `
+Clipo Configuration File ('clipo.json')
+
+The 'clipo.json' file allows for detailed customization of Clipo's behavior.
+You can generate a default config file by running: clipo -cc
+
+Here are the available options:
+
+{
+  "useGitignore": true,
+  // (boolean) If true, Clipo will respect the ignore patterns found in .gitignore files.
+
+  "ignoreFiles": ["file1.ts", "file2.js"],
+  // (string[]) A list of specific file names to ignore.
+
+  "ignoreFolders": ["node_modules", "dist"],
+  // (string[]) A list of folder names to ignore.
+
+  "ignoreExtensions": [".log", ".tmp"],
+  // (string[]) A list of file extensions to ignore.
+
+  "visual": {
+    "style": "true",
+    // (string) "true" or "false" to enable or disable visual styling (emojis).
+
+    "folder": "📁",
+    // (string) The emoji or character to use for folders in the directory structure.
+
+    "file": "📄",
+    // (string) The emoji or character to use for files in the directory structure.
+
+    "excluded": "(excluded)"
+    // (string) The suffix to append to excluded files in the directory structure.
+  },
+
+  "output_encoding": "utf-8",
+  // (string) The encoding to use for the output file.
+
+  "read_large_files": false,
+  // (boolean) If true, Clipo will attempt to read files larger than the max_large_files limit.
+
+  "max_large_files": "10MB",
+  // (string) The maximum size for files to be read.
+
+  "auto_detect_project": true
+  // (boolean) If true, Clipo will automatically detect the project type and apply default ignore patterns.
+}
+`;
+
 export function parseArgs(args: string[]): CliOptions | null {
-  let directoryPath: string | undefined;
-  let outputFile: string | undefined;
-  let fileExtensions: string[] = [];
-  let configPath: string = "clipo.cfg";
+  // --- Initialize Options with Defaults ---
+  const options: CliOptions = {
+    directoryPath: "",
+    fileExtensions: [],
+    configPath: "clipo.cfg",
+    includeIgnoredFiles: false,
+    includeIgnoredFilesSuffix: false,
+    useStyles: true,
+    disableAutoDetect: false,
+    aiFormat: 'standard',
+    includeStats: false,
+    includePrompts: false,
+    includeInstructions: false,
+    includeLineNumbers: false,
+    optimizeFor: 'generic',
+    splitLargeFiles: false,
+    monitor: false,
+    cpymon: false,
+    monitorInterval: 1000,
+    verbose: false,
+    createConfig: false,
+    showConfigHelp: false,
+  };
 
-  let addFile: string | undefined;
-  let addFolder: string | undefined;
-  let addExt: string | undefined;
+  const positionalArgs: string[] = [];
 
-  let includeIgnoredFiles = false;
-  let includeIgnoredFilesSuffix = false;
-  let useStyles = true;
-  let disableAutoDetect = false;
-  
-  // AI-specific options with defaults
-  let aiFormat: 'standard' | 'markdown' | 'xml' | 'json' = 'standard';
-  let includeStats = false;
-  let includePrompts = false;
-  let includeInstructions = false;
-  let includeLineNumbers = false;
-  let optimizeFor: 'gpt' | 'claude' | 'gemini' | 'generic' = 'generic';
-  let maxTokens: number | undefined;
-  let splitLargeFiles = false;
-  let monitor = false;
-  let cpymon = false;
-  let monitorInterval = 1000; // 1 second default
-  let verbose = false;
-
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-
-    if (arg === "--help") {
-      console.log(helpText);
-      return null;
-    } else if (arg.startsWith("--ai-format=")) {
-      const format = arg.substring("--ai-format=".length) as 'standard' | 'markdown' | 'xml' | 'json';
-      if (['standard', 'markdown', 'xml', 'json'].includes(format)) {
-        aiFormat = format;
+  // --- First Pass: Parse Flags and Options ---
+  for (const arg of args) {
+    if (arg.startsWith('-')) { // It's a flag or an option
+      if (arg === "--help") {
+        if (args.includes("-cc") || args.includes("--cc")) {
+          options.showConfigHelp = true;
+        } else {
+          console.log(helpText);
+          return null; // Exit after showing help
+        }
+      } else if (arg === "-cc" || arg === "--cc") {
+        options.createConfig = true;
+      } else if (arg.startsWith("--ai-format=")) {
+        const format = arg.substring("--ai-format=".length) as CliOptions['aiFormat'];
+        if (['standard', 'markdown', 'xml', 'json'].includes(format)) {
+          options.aiFormat = format;
+        }
+      } else if (arg.startsWith("--optimize-for=")) {
+        const model = arg.substring("--optimize-for=".length) as CliOptions['optimizeFor'];
+        if (['gpt', 'claude', 'gemini', 'generic'].includes(model)) {
+          options.optimizeFor = model;
+        }
+      } else if (arg.startsWith("--max-tokens=")) {
+        options.maxTokens = parseInt(arg.substring("--max-tokens=".length));
+      } else if (arg === "--include-stats") {
+        options.includeStats = true;
+      } else if (arg === "--include-prompts") {
+        options.includePrompts = true;
+      } else if (arg === "--include-instructions") {
+        options.includeInstructions = true;
+      } else if (arg === "--include-line-numbers") {
+        options.includeLineNumbers = true;
+      } else if (arg === "--split-large") {
+        options.splitLargeFiles = true;
+      } else if (arg === "--monitor") {
+        options.monitor = true;
+      } else if (arg === "--cpymon") {
+        options.cpymon = true;
+      } else if (arg.startsWith("--monitor-interval=")) {
+        options.monitorInterval = parseInt(arg.substring("--monitor-interval=".length)) || 1000;
+      } else if (arg === "--verbose") {
+        options.verbose = true;
+      } else if (arg.startsWith("--add-file=")) {
+        options.addFile = arg.substring("--add-file=".length);
+      } else if (arg.startsWith("--add-folder=")) {
+        options.addFolder = arg.substring("--add-folder=".length);
+      } else if (arg.startsWith("--add-ext=")) {
+        options.addExt = arg.substring("--add-ext=".length);
+      } else if (arg === "-AIF") {
+        options.includeIgnoredFiles = true;
+      } else if (arg === "-AIFI") {
+        options.includeIgnoredFiles = true;
+        options.includeIgnoredFilesSuffix = true;
+      } else if (arg === "-no-style") {
+        options.useStyles = false;
+      } else if (arg === "--no-auto-detect") {
+        options.disableAutoDetect = true;
+      } else if (arg !== "-cc" && arg !== "--cc" && arg !== "--help") {
+        // It's a flag, but not one we explicitly handle above as a primary action.
+        // It could be a positional argument that starts with a dash.
+        // We will treat it as positional for now.
+        positionalArgs.push(arg);
       }
-    } else if (arg.startsWith("--optimize-for=")) {
-      const model = arg.substring("--optimize-for=".length) as 'gpt' | 'claude' | 'gemini' | 'generic';
-      if (['gpt', 'claude', 'gemini', 'generic'].includes(model)) {
-        optimizeFor = model;
-      }
-    } else if (arg.startsWith("--max-tokens=")) {
-      maxTokens = parseInt(arg.substring("--max-tokens=".length));
-    } else if (arg === "--include-stats") {
-      includeStats = true;
-    } else if (arg === "--include-prompts") {
-      includePrompts = true;
-    } else if (arg === "--include-instructions") {
-      includeInstructions = true;
-    } else if (arg === "--include-line-numbers") {
-      includeLineNumbers = true;
-    } else if (arg === "--split-large") {
-      splitLargeFiles = true;
-    } else if (arg === "--monitor") {
-      monitor = true;
-    } else if (arg === "--cpymon") {
-      cpymon = true;
-    } else if (arg.startsWith("--monitor-interval=")) {
-      monitorInterval = parseInt(arg.substring("--monitor-interval=".length)) || 1000;
-    } else if (arg === "--verbose") {
-      verbose = true;
-    } else if (arg.startsWith("--add-file=")) {
-      addFile = arg.substring("--add-file=".length);
-    } else if (arg.startsWith("--add-folder=")) {
-      addFolder = arg.substring("--add-folder=".length);
-    } else if (arg.startsWith("--add-ext=")) {
-      addExt = arg.substring("--add-ext=".length);
-    } else if (arg === "-AIF") {
-      includeIgnoredFiles = true;
-    } else if (arg === "-AIFI") {
-      includeIgnoredFiles = true;
-      includeIgnoredFilesSuffix = true;
-    } else if (arg === "-no-style") {
-      useStyles = false;
-    } else if (arg === "--no-auto-detect") {
-      disableAutoDetect = true;
-    } else if (!directoryPath) {
-      directoryPath = arg;
-    } else if (!outputFile && directoryPath) {
-      outputFile = arg;
-    } else if (directoryPath && outputFile && fileExtensions.length === 0) {
-      fileExtensions = arg
-        ? arg.split(",").map((ext) => {
-            return ext.startsWith(".")
-              ? ext.toLowerCase()
-              : `.${ext.toLowerCase()}`;
-          })
-        : [];
     } else {
-      configPath = arg;
+      // --- It's a Positional Argument ---
+      positionalArgs.push(arg);
     }
   }
 
-  if (!directoryPath) {
+  // --- Second Pass: Assign Positional Arguments ---
+  if (positionalArgs.length > 0) {
+    options.directoryPath = positionalArgs.shift()!;
+  }
+  if (positionalArgs.length > 0) {
+    options.outputFile = positionalArgs.shift()!;
+  }
+  if (positionalArgs.length > 0) {
+    const exts = positionalArgs.shift()!;
+    options.fileExtensions = exts
+      ? exts.split(",").map((ext) => (ext.startsWith(".") ? ext.toLowerCase() : `.${ext.toLowerCase()}`))
+      : [];
+  }
+   if (positionalArgs.length > 0) {
+    options.configPath = positionalArgs.shift()!;
+  }
+
+  // --- Validation ---
+  // If no directory is provided, but we aren't creating a config or showing help, it's an error.
+  if (!options.directoryPath && !options.createConfig && !options.showConfigHelp) {
     console.error("Error: Missing <directory_path> argument.");
     console.log(helpText);
     return null;
   }
 
-  return {
-    directoryPath,
-    outputFile,
-    fileExtensions,
-    configPath,
-    addFile,
-    addFolder,
-    addExt,
-    includeIgnoredFiles,
-    includeIgnoredFilesSuffix,
-    useStyles,
-    disableAutoDetect,
-    aiFormat,
-    includeStats,
-    includePrompts,
-    includeInstructions,
-    includeLineNumbers,
-    optimizeFor,
-    maxTokens,
-    splitLargeFiles,
-    monitor,
-    cpymon,
-    monitorInterval,
-    verbose,
-  };
+  return options;
 }
 
 export async function validateDirectory(directoryPath: string): Promise<boolean> {
