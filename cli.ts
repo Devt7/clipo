@@ -152,9 +152,9 @@ Configuration File Format (clipo.cfg):
 `;
 
 export const configHelpText = `
-Clipo Configuration File ('clipo.json')
+Clipo Configuration File (`clipo.json`)
 
-The 'clipo.json' file allows for detailed customization of Clipo's behavior.
+The \`clipo.json\` file allows for detailed customization of Clipo's behavior.
 You can generate a default config file by running: clipo -cc
 
 Here are the available options:
