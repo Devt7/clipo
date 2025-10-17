@@ -27,6 +27,8 @@ export interface CliOptions {
   cpymon: boolean;
   monitorInterval: number;
   verbose: boolean;
+  createConfig: boolean;
+  showConfigHelp: boolean;
 }
 
 const helpText = `
@@ -72,6 +74,7 @@ Arguments:
   -AIFI                        Include ignored files in the directory structure, marked as (excluded).
   -no-style                    Exclude styling emojis from directory structure output
   --no-auto-detect             Disable automatic project type detection
+  -cc                          Create a default clipo.json config file in the target directory.
 
 🎯 AI Use Case Examples:
   # Basic AI-ready output with statistics
@@ -148,6 +151,55 @@ Configuration File Format (clipo.cfg):
    .png, .jpeg: 🖼️                  # Custom icons by extension
 `;
 
+export const configHelpText = `
+Clipo Configuration File (`clipo.json`)
+
+The \`clipo.json\` file allows for detailed customization of Clipo's behavior.
+You can generate a default config file by running: clipo -cc
+
+Here are the available options:
+
+{
+  "useGitignore": true,
+  // (boolean) If true, Clipo will respect the ignore patterns found in .gitignore files.
+
+  "ignoreFiles": ["file1.ts", "file2.js"],
+  // (string[]) A list of specific file names to ignore.
+
+  "ignoreFolders": ["node_modules", "dist"],
+  // (string[]) A list of folder names to ignore.
+
+  "ignoreExtensions": [".log", ".tmp"],
+  // (string[]) A list of file extensions to ignore.
+
+  "visual": {
+    "style": "true",
+    // (string) "true" or "false" to enable or disable visual styling (emojis).
+
+    "folder": "📁",
+    // (string) The emoji or character to use for folders in the directory structure.
+
+    "file": "📄",
+    // (string) The emoji or character to use for files in the directory structure.
+
+    "excluded": "(excluded)"
+    // (string) The suffix to append to excluded files in the directory structure.
+  },
+
+  "output_encoding": "utf-8",
+  // (string) The encoding to use for the output file.
+
+  "read_large_files": false,
+  // (boolean) If true, Clipo will attempt to read files larger than the max_large_files limit.
+
+  "max_large_files": "10MB",
+  // (string) The maximum size for files to be read.
+
+  "auto_detect_project": true
+  // (boolean) If true, Clipo will automatically detect the project type and apply default ignore patterns.
+}
+`;
+
 export function parseArgs(args: string[]): CliOptions | null {
   let directoryPath: string | undefined;
   let outputFile: string | undefined;
@@ -176,13 +228,19 @@ export function parseArgs(args: string[]): CliOptions | null {
   let cpymon = false;
   let monitorInterval = 1000; // 1 second default
   let verbose = false;
+  let createConfig = false;
+  let showConfigHelp = false;
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
 
     if (arg === "--help") {
-      console.log(helpText);
-      return null;
+      if (args.includes("-cc")) {
+        showConfigHelp = true;
+      } else {
+        console.log(helpText);
+        return null;
+      }
     } else if (arg.startsWith("--ai-format=")) {
       const format = arg.substring("--ai-format=".length) as 'standard' | 'markdown' | 'xml' | 'json';
       if (['standard', 'markdown', 'xml', 'json'].includes(format)) {
@@ -228,6 +286,8 @@ export function parseArgs(args: string[]): CliOptions | null {
       useStyles = false;
     } else if (arg === "--no-auto-detect") {
       disableAutoDetect = true;
+    } else if (arg === "-cc") {
+      createConfig = true;
     } else if (!directoryPath) {
       directoryPath = arg;
     } else if (!outputFile && directoryPath) {
@@ -275,6 +335,8 @@ export function parseArgs(args: string[]): CliOptions | null {
     cpymon,
     monitorInterval,
     verbose,
+    createConfig,
+    showConfigHelp,
   };
 }
 

@@ -23,6 +23,23 @@ export interface Config {
 
 export const DEFAULT_CONFIG_PATHS = ["clipo.cfg", "clipo.json"];
 
+export const DEFAULT_CONFIG: Config = {
+  useGitignore: true,
+  ignoreFiles: [],
+  ignoreFolders: [],
+  ignoreExtensions: [],
+  visual: {
+    style: "true",
+    folder: "📁",
+    file: "📄",
+    excluded: "(excluded)",
+  },
+  output_encoding: "utf-8",
+  read_large_files: false,
+  max_large_files: "10MB",
+  auto_detect_project: true,
+};
+
 export async function loadConfig(
   configPath?: string,
   projectPath: string = ".",
