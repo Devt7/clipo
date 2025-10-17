@@ -27,6 +27,7 @@ export interface CliOptions {
   cpymon: boolean;
   monitorInterval: number;
   verbose: boolean;
+  createConfig: boolean;
 }
 
 const helpText = `
@@ -72,6 +73,7 @@ Arguments:
   -AIFI                        Include ignored files in the directory structure, marked as (excluded).
   -no-style                    Exclude styling emojis from directory structure output
   --no-auto-detect             Disable automatic project type detection
+  -cc                          Create a default clipo.json config file in the target directory.
 
 🎯 AI Use Case Examples:
   # Basic AI-ready output with statistics
@@ -176,6 +178,7 @@ export function parseArgs(args: string[]): CliOptions | null {
   let cpymon = false;
   let monitorInterval = 1000; // 1 second default
   let verbose = false;
+  let createConfig = false;
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -228,6 +231,8 @@ export function parseArgs(args: string[]): CliOptions | null {
       useStyles = false;
     } else if (arg === "--no-auto-detect") {
       disableAutoDetect = true;
+    } else if (arg === "-cc") {
+      createConfig = true;
     } else if (!directoryPath) {
       directoryPath = arg;
     } else if (!outputFile && directoryPath) {
@@ -275,6 +280,7 @@ export function parseArgs(args: string[]): CliOptions | null {
     cpymon,
     monitorInterval,
     verbose,
+    createConfig,
   };
 }
 

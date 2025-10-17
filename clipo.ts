@@ -9,7 +9,7 @@
  */
 
 import { basename } from "https://deno.land/std@0.212.0/path/mod.ts";
-import { loadConfig, writeConfig } from "./config.ts";
+import { DEFAULT_CONFIG, loadConfig, writeConfig } from "./config.ts";
 import { getFilesWithContent, generateDirectoryStructure } from "./fileProcessor.ts";
 import { parseArgs, validateDirectory, CliOptions } from "./cli.ts";
 import { formatForAI } from "./streamlinedAIFormatter.ts";
@@ -35,6 +35,17 @@ async function main() {
   if (!options) Deno.exit(1);
 
   const validatedOptions = options!;
+  if (validatedOptions.createConfig) {
+    const dir = validatedOptions.directoryPath || ".";
+    if (!(await validateDirectory(dir))) {
+      Deno.exit(1);
+    }
+    const configPath = `${dir}/clipo.json`;
+    await writeConfig(DEFAULT_CONFIG, configPath);
+    console.log(`✅ Default configuration file created at ${configPath}`);
+    Deno.exit(0);
+  }
+
   if (!(await validateDirectory(validatedOptions.directoryPath))) {
     Deno.exit(1);
   }

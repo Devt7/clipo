@@ -1,4 +1,4 @@
-import { join, basename } from "https://deno.land/std@0.212.0/path/mod.ts";
+import { join, extname } from "https://deno.land/std@0.212.0/path/mod.ts";
 import { exists } from "https://deno.land/std@0.212.0/fs/mod.ts";
 import { detectProjectType, getDefaultIgnorePatterns } from "./projectDetection.ts";
 
@@ -21,24 +21,58 @@ export interface Config {
   project_type?: string;
 }
 
-export const DEFAULT_CONFIG_PATH = "clipo.cfg";
+export const DEFAULT_CONFIG_PATHS = ["clipo.cfg", "clipo.json"];
+
+export const DEFAULT_CONFIG: Config = {
+  useGitignore: true,
+  ignoreFiles: [],
+  ignoreFolders: [],
+  ignoreExtensions: [],
+  visual: {
+    style: "true",
+    folder: "📁",
+    file: "📄",
+    excluded: "(excluded)",
+  },
+  output_encoding: "utf-8",
+  read_large_files: false,
+  max_large_files: "10MB",
+  auto_detect_project: true,
+};
 
 export async function loadConfig(
-  configPath: string = DEFAULT_CONFIG_PATH,
+  configPath?: string,
   projectPath: string = ".",
   disableAutoDetect: boolean = false
 ): Promise<Config> {
   let config: Config = {};
+  let foundConfigPath: string | undefined = configPath;
 
-  // Try to load existing config file
-  try {
-    const configContent = await Deno.readTextFile(configPath);
-    config = parseConfigFile(configContent);
-  } catch (error) {
-    console.warn(
-      `Config file '${configPath}' not found or invalid: ${error}. Using defaults.`
-    );
+  if (!foundConfigPath) {
+    for (const path of DEFAULT_CONFIG_PATHS) {
+        if (await exists(path)) {
+            foundConfigPath = path;
+            break;
+        }
+    }
   }
+
+
+  if (foundConfigPath) {
+      try {
+        const configContent = await Deno.readTextFile(foundConfigPath);
+        if (extname(foundConfigPath) === ".json") {
+            config = JSON.parse(configContent);
+        } else {
+            config = parseConfigFile(configContent);
+        }
+      } catch (error) {
+        console.warn(
+          `Config file '${foundConfigPath}' not found or invalid: ${error}. Using defaults.`
+        );
+      }
+  }
+
 
   // Set defaults if not specified
   config.useGitignore = config.useGitignore ?? true;
@@ -55,7 +89,7 @@ export async function loadConfig(
   // Auto-detect project type and apply defaults if enabled
   if (config.auto_detect_project) {
     const detectedTypes = await detectProjectType(projectPath);
-    
+
     if (detectedTypes.length > 0) {
       // Prefer Deno as primary when deno.json/deno.jsonc exists at root
       try {
@@ -71,19 +105,19 @@ export async function loadConfig(
 
       config.project_type = detectedTypes[0]; // Primary detected type
       console.log(`📋 Detected project type(s): ${detectedTypes.join(", ")}`);
-      console.log(`⭐ Primary project type: ${config.project_type}`);
-      
+      console.log(`✅ Primary project type: ${config.project_type}`);
+
       // Apply default ignore patterns if not already configured
       const defaultPatterns = getDefaultIgnorePatterns(detectedTypes);
-      
+
       // Merge with existing patterns (existing takes precedence)
       config.ignoreFiles = mergeArrays(config.ignoreFiles, defaultPatterns.files);
       config.ignoreFolders = mergeArrays(config.ignoreFolders, defaultPatterns.folders);
       config.ignoreExtensions = mergeArrays(config.ignoreExtensions, defaultPatterns.extensions);
-      
+
       console.log(`✅ Applied default ignore patterns for ${detectedTypes.join(", ")}`);
     } else {
-      console.log("🔍 No specific project type detected, using minimal defaults");
+      console.log("🤔 No specific project type detected, using minimal defaults");
     }
   }
 
@@ -104,7 +138,7 @@ function mergeArrays(existing?: string[], defaults: string[] = []): string[] {
   if (!existing || existing.length === 0) {
     return [...defaults];
   }
-  
+
   // Merge and deduplicate
   const combined = [...existing, ...defaults];
   return [...new Set(combined)];
@@ -129,7 +163,7 @@ export function parseConfigFile(configContent: string): Config {
 
     const colonIndex = trimmedLine.indexOf(":");
     if (colonIndex === -1) continue;
-    
+
     const key = trimmedLine.substring(0, colonIndex).trim();
     const value = trimmedLine.substring(colonIndex + 1).trim();
 
@@ -178,7 +212,7 @@ export function parseConfigFile(configContent: string): Config {
 
 function parseListValue(value: string): string[] {
   if (!value || value.trim() === "") return [];
-  
+
   return value
     .split(",")
     .map(s => s.trim())
@@ -187,10 +221,15 @@ function parseListValue(value: string): string[] {
 
 export async function writeConfig(
   config: Config,
-  configPath: string = DEFAULT_CONFIG_PATH
+  configPath: string = "clipo.cfg"
 ): Promise<void> {
+    if (extname(configPath) === ".json") {
+        await Deno.writeTextFile(configPath, JSON.stringify(config, null, 2));
+        return;
+    }
+
   const lines: string[] = [];
-  
+
   // Add header comment
   lines.push("# Clipo Configuration");
   lines.push("# Auto-generated configuration file");
@@ -200,11 +239,11 @@ export async function writeConfig(
   lines.push("# Core Settings");
   lines.push(`gitignore: ${config.useGitignore === true ? "true" : "false"}`);
   lines.push(`auto_detect_project: ${config.auto_detect_project === true ? "true" : "false"}`);
-  
+
   if (config.project_type) {
     lines.push(`project_type: ${config.project_type}`);
   }
-  
+
   lines.push(`output_encoding: ${config.output_encoding || "utf-8"}`);
   lines.push(`read_large_files: ${config.read_large_files === true ? "true" : "false"}`);
   lines.push(`max_large_files: ${config.max_large_files || "10MB"}`);
