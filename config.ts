@@ -23,6 +23,8 @@ export interface Config {
 
 export const DEFAULT_CONFIG_PATHS = ["clipo.cfg", "clipo.json"];
 
+export const DEFAULT_CONFIG_PATH = "clipo.cfg";
+
 export const DEFAULT_CONFIG: Config = {
   useGitignore: true,
   ignoreFiles: [],

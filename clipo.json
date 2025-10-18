@@ -1,0 +1,16 @@
+{
+  "useGitignore": true,
+  "ignoreFiles": [],
+  "ignoreFolders": [],
+  "ignoreExtensions": [],
+  "visual": {
+    "style": "true",
+    "folder": "📁",
+    "file": "📄",
+    "excluded": "(excluded)"
+  },
+  "output_encoding": "utf-8",
+  "read_large_files": false,
+  "max_large_files": "10MB",
+  "auto_detect_project": true
+}
